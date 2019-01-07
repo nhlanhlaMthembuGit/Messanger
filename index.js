@@ -1,7 +1,7 @@
 'use strict';
 const BootBot = require('bootbot');
 const axios = require('axios');
-const engineModule = require('engineModule');
+const engineModule = require('./modules/engine');
 
 const bot = new BootBot({
   accessToken: 'EAAdm55t1bJ0BAAB1fF90afkAbuAXx4uckbGtkoZATWXddQTQgciCJWNTZChdjNjLEslfkg9e2DTWL7IideNDUZCEY0vHZCxKYKmcbYtTmwWnpd2hZBAag79AaNs4yqyRoy2pIxLQvaQFHc6kknW3nFv1EvkDKC45rE66nJ1nc9PiPG5nb4ZCK1',
@@ -9,7 +9,7 @@ const bot = new BootBot({
   appSecret: '247f6ff7cc7e090801d96ee74c812217'
 });
 
-bot.module(engineModule)
+
 
 
 //default menu
@@ -217,6 +217,6 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 
 	})
 })
-
-module.exports = engine;
+bot.module(engineModule);
+// module.exports = engine;
 bot.start();
