@@ -18,6 +18,11 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
                     const text = payload.message.text;
                     convo.set('intent', text)
                     convo.say('Processing...').then(() => {
+                        let startingMenu = {
+                            STRING: '*121#',
+                            MSISDN: ctx.session.contact_number,
+                            PDU: 'PSSRR'
+                        }
                         axios.post('http://2828f6eb.ngrok.io/processor/v1/actionRequest', startingMenu)
                             .then((Response) => {
                                 console.log(Response.data)
