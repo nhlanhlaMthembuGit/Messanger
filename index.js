@@ -1,14 +1,17 @@
 'use strict';
 const BootBot = require('bootbot');
 const axios = require('axios');
-const engineModule = require('./modules/engine');
+const addUser = require('./utils')
+//const engineModule = require('./modules/engine');
 
 const bot = new BootBot({
-  accessToken: 'EAAdm55t1bJ0BAAB1fF90afkAbuAXx4uckbGtkoZATWXddQTQgciCJWNTZChdjNjLEslfkg9e2DTWL7IideNDUZCEY0vHZCxKYKmcbYtTmwWnpd2hZBAag79AaNs4yqyRoy2pIxLQvaQFHc6kknW3nFv1EvkDKC45rE66nJ1nc9PiPG5nb4ZCK1',
+  accessToken: 'EAAdm55t1bJ0BAONZCdiMwKG8bxhonyRY5DZAfMWbgbeJTEnuZBZBd23QlzPj2WjiDMMUl7U00jB8TiUNcLGAuvWxGAbnIYuci7ghrPOEjXVwsXq2xioIVl9DG03aNk7aCOKmBzvyMoGeQkdCZBvXyn2WMLVQ7fuNZCYWhUo3IgIQZDZD',
   verifyToken: 'mtn-ai-bot',
   appSecret: '247f6ff7cc7e090801d96ee74c812217'
 });
 
+
+//bot.module(engineModule);
 
 
 
@@ -30,7 +33,7 @@ bot.hear('menu', (payload, chat) => {
 //HISTORY 
 bot.on('postback:HISTORY', (payload, chat) => {
 	chat.getUserProfile().then((user) => {
-		axios.get('https://processor-module.firebaseapp.com/processor/v1/userIntents/' + user.id)
+		axios.get('http://9a533d79.ngrok.io/processor/v1/userIntents/' + user.id)
 			.then(response => {
 				console.log(response.data);
 
@@ -73,7 +76,7 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 		const text = payload.message.text;
 		console.log(user.id)
 		chat.say(`Y'ello, ${user.first_name}! `, { typing: true }).then(() => {
-			axios.get('https://processor-module.firebaseapp.com/processor/v1/userDetails/' + user.first_name)
+			axios.get('http://9a533d79.ngrok.io/processor/v1/userDetails/' + user.first_name)
 				.then(response => {
 					if (response.data.exists === true) {
 						console.log("[+] The user exists, routing to the default menu.");
@@ -83,14 +86,14 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 						const buttons = [
 							{ type: 'postback', title: 'promos', payload: 'PROMOS' },
 							{ type: 'postback', title: 'History', payload: 'HISTORY' },
-							{ type: 'postback', title: 'Exit', payload: 'EXIT' }
+							{ type: 'postback', title: 'MTNMENU', payload: 'MTNMENU' }
 						];
 						chat.sendButtonTemplate(`Y'ello ${user.first_name}!, How can i help you?`, buttons);
 
 						//PROMOS
 						bot.on('postback:PROMOS', (payload, chat) => {
 							chat.say(`Did you know?`);
-							axios.get('https://processor-module.firebaseapp.com/processor/v1/promotions')
+							axios.get('http://9a533d79.ngrok.io/processor/v1/promotions')
 								.then(response => {
 									chat.say(response.data.advert);
 
@@ -100,7 +103,7 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 						//HISTORY 
 						bot.on('postback:HISTORY', (payload, chat) => {
 							chat.getUserProfile().then((user) => {
-								axios.get('https://processor-module.firebaseapp.com/processor/v1/userIntents/' + user.id)
+								axios.get('http://9a533d79.ngrok.io/processor/v1/userIntents/' + user.id)
 									.then(response => {
 										console.log(response.data);
 
@@ -130,12 +133,12 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 
 
 
-						//EXIT
-						bot.on('postback:EXIT', (payload, chat) => {
-							chat.getUserProfile().then((user) => {
-								chat.say(`Bye ${user.first_name}! come back soon. \nTo go to the main menu just enter “menu.”`);
-							});
-						});
+						// //EXIT
+						// bot.on('postback:EXIT', (payload, chat) => {
+						// 	chat.getUserProfile().then((user) => {
+						// 		chat.say(`Bye ${user.first_name}! come back soon. \nTo go to the main menu just enter “menu.”`);
+						// 	});
+						// });
 
 
 					}
@@ -217,6 +220,6 @@ bot.hear([/hello( there)?/i, /hey( there)?/i, /hi( there)?/i], (payload, chat) =
 
 	})
 })
-bot.module(engineModule);
-// module.exports = engine;
+
+
 bot.start();
